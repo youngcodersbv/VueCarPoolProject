@@ -1,6 +1,6 @@
 <template>
     <label for="filter">Filter</label>
-    <input v-model="filter" @change="reFilter">
+    <input v-model="filter" @change="getCommutes">
     <table>
         <thead>
             <tr>
@@ -32,19 +32,8 @@ export default defineComponent({
     },
     methods: {
         getCommutes() {
-            fetch('http://localhost:8080/json/commutes')
-                .then(res => res.json())
-                .then(json => {
-                    for (const commute of json) {
-                        console.log(commute)
-                        this.commutes.push(commute)
-                    }
-                       
-                });
-        },
-        reFilter(e: any) {
             let url = 'http://localhost:8080/json/commutes'
-                    + (e.target.value ? '?filter=' + e.target.value : '');
+                    + (this.filter ? '?filter=' + this.filter : '');
             console.log(url);
             fetch(url)
                 .then(res => res.json())

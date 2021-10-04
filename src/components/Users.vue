@@ -1,4 +1,5 @@
-<template>
+<template><label for="filter">Filter</label>
+    <input v-model="filter" @change="getUsers">
     <table>
         <thead>
             <tr>
@@ -14,6 +15,8 @@
         </tbody>
     </table>
 </template>
+
+
 <script lang="ts">
 import { defineComponent } from 'vue';
 
@@ -21,14 +24,22 @@ export default defineComponent({
   name: 'Users',
   data() {
       return {
-        users: [] as any
+        users: [] as any,
+            filter: ""
       }
   },
   methods: {
       getUsers() {
-        fetch("http://localhost:8080/json/users")
+            let url = 'http://localhost:8080/json/users'
+                    + (this.filter ? '?filter=' + this.filter : '');
+            console.log(url);
+            fetch(url)
           .then(res => res.json())
           .then(json => {
+            while(this.users.length) {
+                this.users.pop()
+            }
+
               for (const x of json) {
                   this.users.push(x)
               }
