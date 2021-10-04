@@ -1,4 +1,6 @@
 <template>
+    <label for="filter">Filter</label>
+    <input v-model="filter" @change="reFilter">
     <table>
         <thead>
             <tr>
@@ -24,7 +26,8 @@ export default defineComponent({
     name: 'Commutes',
     data() {
         return {
-            commutes: [] as any
+            commutes: [] as any,
+            filter: ""
         }
     },
     methods: {
@@ -37,7 +40,22 @@ export default defineComponent({
                         this.commutes.push(commute)
                     }
                        
-                })
+                });
+        },
+        reFilter(e: any) {
+            let url = 'http://localhost:8080/json/commutes'
+                    + (e.target.value ? '?filter=' + e.target.value : '');
+            console.log(url);
+            fetch(url)
+                .then(res => res.json())
+                .then(json => {
+                    while (this.commutes.length) { this.commutes.pop(); }
+
+                    for (const commute of json) {
+                        console.log(commute)
+                        this.commutes.push(commute)
+                    } 
+                });
         }
     },
     mounted() {
